@@ -24,7 +24,9 @@
   ],
   "host_permissions": [
     "https://cvtoletter.com/*",
-    "https://covergen-wild-mountain-3122.fly.dev/*"
+    "https://covergen-wild-mountain-3122.fly.dev/*",
+    "https://accounts.google.com/*",
+    "https://www.googleapis.com/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -47,5 +49,6 @@
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/userinfo.profile"
     ]
-  }
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvWiM8p4UNT7doEJ7J0RJYWRJjJ1zCHbfQaX2b3tE1eTyxQm1v+7K1w6Ps5t9EKxqrXx85vvmQW6K9/qkj61xfRJbIa5bbuzfHp5xBxQ1J9K4+d34kn3LXnwcn05DGmD4YqJXnU7WyOHF9ejdGlCubL2/XWO+dHnYWa16n5hPvByWs0KwgV9J/IqOD0fPLLpbXfRtPfhcAZS6xXYdmW8Dn0VN1aNhbPxvW0eYbBldQ4yrUxQ/ZWIyFSQUl0D8TKvyxeAKsSJ1kZsC0VWFwSafHEqPwK9zt10YLWAq8ypfQws1U1EgY5JfQb3VBP1q/U7UwxUoUZS/a7HlCWgTW7P2nQIDAQAB"
 }
