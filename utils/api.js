@@ -68,36 +68,16 @@ async function generateCoverLetter(userId, jobDescription) {
   }
 }
 
-// Update user credits after generating a cover letter
-async function updateUserCreditsAfterGeneration(userId) {
+// Get updated credits after generating a cover letter
+async function getUpdatedCredits(userId) {
   try {
-    // Get current user
-    const user = await getCurrentUser();
-    if (!user || !user.token) {
-      throw new Error('User not authenticated');
-    }
+    // Wait a short time to ensure the credits have been updated on the server
+    await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Call the API to update credits
-    const response = await fetch(`${WEB_APP_URL}/api/user/decrement-credit`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.token}`
-      },
-      body: JSON.stringify({
-        user_id: userId
-      })
-    });
-    
-    if (!response.ok) {
-      console.error('Failed to update credits on server');
-      // Don't throw here, just log the error and allow the process to continue
-    }
-    
-    // Return latest credits count from API
+    // Get the updated credits from the API
     return await getUserCreditsFromAPI(userId);
   } catch (error) {
-    console.error('Error updating credits:', error);
+    console.error('Error fetching updated credits:', error);
     // If there's an error, we'll return -1 to indicate we should use local calculation
     return -1;
   }
