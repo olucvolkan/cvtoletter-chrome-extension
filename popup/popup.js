@@ -311,8 +311,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Generate cover letter
       const result = await generateCoverLetter(user.id, jobDescriptionText);
       
-      // Update credits (subtract 1)
-      updateUserCredits(credits - 1);
+      // Instead of immediately updating credits locally, use the API to properly update credits
+      try {
+        // First update the server-side credit count
+        const updatedCredits = await updateUserCreditsAfterGeneration(user.id);
+        
+        if (updatedCredits >= 0) {
+          // If we got a valid response from the server, use that value
+          updateUserCredits(updatedCredits);
+        } else {
+          // If server-side update failed, fall back to local calculation
+          updateUserCredits(credits - 1);
+        }
+      } catch (creditError) {
+        console.error('Error updating credits:', creditError);
+        // Fall back to local calculation if there's any error in credit update
+        updateUserCredits(credits - 1);
+      }
       
       // Show result
       showResultState(result.cover_letter);
