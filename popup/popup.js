@@ -311,26 +311,29 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Generate cover letter
       const result = await generateCoverLetter(user.id, jobDescriptionText);
       
-      // Instead of immediately updating credits locally, use the API to properly update credits
+      // After successful generation, we need to:
+      // 1. Temporarily update UI to be responsive
+      // 2. Fetch the latest credit count from the server to ensure accuracy
+      
+      // First, update UI temporarily (for better UX)
+      updateUserCredits(credits - 1);
+      
+      // Then show the result
+      showResultState(result.cover_letter);
+      
+      // Now fetch updated credits from server in the background
+      // to make sure credits are synchronized with the server
       try {
-        // First update the server-side credit count
-        const updatedCredits = await updateUserCreditsAfterGeneration(user.id);
-        
+        const updatedCredits = await getUpdatedCredits(user.id);
         if (updatedCredits >= 0) {
-          // If we got a valid response from the server, use that value
+          // Only update if we got a valid response
           updateUserCredits(updatedCredits);
-        } else {
-          // If server-side update failed, fall back to local calculation
-          updateUserCredits(credits - 1);
         }
       } catch (creditError) {
-        console.error('Error updating credits:', creditError);
-        // Fall back to local calculation if there's any error in credit update
-        updateUserCredits(credits - 1);
+        console.error('Error fetching updated credits:', creditError);
+        // If there was an error fetching credits, we already have a temporary UI update,
+        // so no further action needed here
       }
-      
-      // Show result
-      showResultState(result.cover_letter);
     } catch (error) {
       console.error('Error generating cover letter:', error);
       showError(error.message || 'Failed to generate cover letter. Please try again.');
