@@ -67,3 +67,38 @@ async function generateCoverLetter(userId, jobDescription) {
     throw error;
   }
 }
+
+// Update user credits after generating a cover letter
+async function updateUserCreditsAfterGeneration(userId) {
+  try {
+    // Get current user
+    const user = await getCurrentUser();
+    if (!user || !user.token) {
+      throw new Error('User not authenticated');
+    }
+    
+    // Call the API to update credits
+    const response = await fetch(`${WEB_APP_URL}/api/user/decrement-credit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
+      },
+      body: JSON.stringify({
+        user_id: userId
+      })
+    });
+    
+    if (!response.ok) {
+      console.error('Failed to update credits on server');
+      // Don't throw here, just log the error and allow the process to continue
+    }
+    
+    // Return latest credits count from API
+    return await getUserCreditsFromAPI(userId);
+  } catch (error) {
+    console.error('Error updating credits:', error);
+    // If there's an error, we'll return -1 to indicate we should use local calculation
+    return -1;
+  }
+}
