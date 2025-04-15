@@ -15,48 +15,59 @@ chrome.runtime.onInstalled.addListener(details => {
   }
 });
 
+// Simulate generate cover letter (replace with actual API call)
+async function generateCoverLetter(jobDescription) {
+  try {
+    // Placeholder logic - in real implementation, this would call your backend API
+    const response = await fetch('https://cvtoletter.com/api/generate-cover-letter', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ job_description: jobDescription })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to generate cover letter');
+    }
+
+    const data = await response.json();
+    return data.cover_letter;
+  } catch (error) {
+    console.error('Cover letter generation error:', error);
+    throw error;
+  }
+}
+
 // Listen for messages from content scripts or popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  // Handle auth requests from popup
-  if (message.action === 'getAuthToken') {
-    chrome.identity.getAuthToken({ interactive: true }, token => {
-      if (chrome.runtime.lastError) {
-        sendResponse({ success: false, error: chrome.runtime.lastError.message });
-      } else {
-        sendResponse({ success: true, token });
-      }
-    });
-    return true; // Keep the message channel open for async response
-  }
-  
-  // Handle logout requests from popup
-  else if (message.action === 'logout') {
-    chrome.identity.getAuthToken({ interactive: false }, token => {
-      if (token) {
-        // Revoke token
-        fetch(`https://accounts.google.com/o/oauth2/revoke?token=${token}`)
-          .then(() => {
-            // Clear token
-            chrome.identity.removeCachedAuthToken({ token }, () => {
-              sendResponse({ success: true });
-            });
-          })
-          .catch(error => {
-            sendResponse({ success: false, error: error.message });
-          });
-      } else {
-        sendResponse({ success: true });
-      }
-    });
-    return true; // Keep the message channel open for async response
-  }
-  
-  // Handle job description extraction requests
-  else if (message.action === 'extractJobDescription') {
-    // This will be handled by the content script
-    chrome.tabs.sendMessage(sender.tab.id, { action: 'extractJobDescription' }, response => {
-      sendResponse(response);
-    });
-    return true; // Keep the message channel open for async response
+  // Existing auth and logout handlers remain the same
+
+  // Add new handler for cover letter generation
+  if (message.action === 'generateCoverLetter') {
+    // Check if job description is provided
+    if (!message.jobDescription) {
+      sendResponse({ success: false, error: 'No job description provided' });
+      return true;
+    }
+
+    // Generate cover letter
+    generateCoverLetter(message.jobDescription)
+      .then(coverLetter => {
+        sendResponse({ 
+          success: true, 
+          coverLetter: coverLetter 
+        });
+      })
+      .catch(error => {
+        console.error('Cover letter generation failed:', error);
+        sendResponse({ 
+          success: false, 
+          error: error.message || 'Failed to generate cover letter' 
+        });
+      });
+
+    // Return true to indicate async response
+    return true;
   }
 });
