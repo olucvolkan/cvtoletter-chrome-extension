@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CvToLetter Cover Letter Generator",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "Generate tailored cover letters for job descriptions with a single click using CvToLetter AI",
   "icons": {
     "16": "assets/icon-16.png",
@@ -12,7 +12,7 @@
     "default_popup": "popup/popup.html",
     "default_icon": {
       "16": "assets/icon-16.png",
-      "48": "assets/icon-48.png", 
+      "48": "assets/icon-48.png",
       "128": "assets/icon-128.png"
     }
   },
@@ -35,15 +35,12 @@
     {
       "matches": [
         "https://*.linkedin.com/jobs/*",
-        "https://*.indeed.com/*", 
+        "https://*.indeed.com/*",
         "https://*.glassdoor.com/*",
         "https://*.monster.com/*",
         "https://*.ziprecruiter.com/*"
       ],
-      "js": [
-        "content/content-script.js",
-        "content/job-description-popup.js"
-      ]
+      "js": ["content/content-script.js"]
     }
   ],
   "oauth2": {
@@ -52,6 +49,5 @@
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/userinfo.profile"
     ]
-  },
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvWiM8p4UNT7doEJ7J0RJYWRJjJ1zCHbfQaX2b3tE1eTyxQm1v+7K1w6Ps5t9EKxqrXx85vvmQW6K9/qkj61xfRJbIa5bbuzfHp5xBxQ1J9K4+d34kn3LXnwcn05DGmD4YqJXnU7WyOHF9ejdGlCubL2/XWO+dHnYWa16n5hPvByWs0KwgV9J/IqOD0fPLLpbXfRtPfhcAZS6xXYdmW8Dn0VN1aNhbPxvW0eYbBldQ4yrUxQ/ZWIyFSQUl0D8TKvyxeAKsSJ1kZsC0VWFwSafHEqPwK9zt10YLWAq8ypfQws1U1EgY5JfQb3VBP1q/U7UwxUoUZS/a7HlCWgTW7P2nQIDAQAB"
+  }
 }
